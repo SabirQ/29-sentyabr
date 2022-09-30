@@ -1,20 +1,29 @@
 using Microsoft.EntityFrameworkCore;
 using UserRegistrationMvc.DataContext;
+using UserRegistrationMvc.Hubs;
 using UserRegistrationMvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "Login.Session";
-    options.IdleTimeout = TimeSpan.FromSeconds(60);
+    options.IdleTimeout = TimeSpan.FromSeconds(90);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-builder.Services.AddDbContext<Context>(x => x.UseSqlServer("server=localhost;database=MvcRegistrationDb;integrated security=true"));
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "Username.Session";
+    options.IdleTimeout = TimeSpan.FromSeconds(90);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddDbContext<Context>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 
 var app = builder.Build();
 
@@ -43,5 +52,5 @@ app.UseEndpoints(endpoints =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=register}/{id?}");
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();

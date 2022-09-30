@@ -20,7 +20,7 @@ namespace UserRegistrationMvc.Filters
             bool result = Enum.TryParse(role, out roleEnum);
             if (role==null||result==false)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary{{"area",null },{ "controller", "home" },{ "action", "error" }});
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary{{"area",null },{ "controller", "auth" },{ "action", "register" }});
             }
             if ((int)roleEnum<=(int)_role)
             {

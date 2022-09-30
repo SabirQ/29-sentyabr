@@ -10,13 +10,11 @@ namespace UserRegistrationMvc.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly Context _context;
         private const string LOGIN_SESSION_KEY = "login";
         private const string LOGIN_SESSION_USERNAME = "username";
-        public AuthController(IAuthService authService,Context context)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _context = context;
         }
         public async Task<IActionResult> Index()
         {
@@ -25,7 +23,7 @@ namespace UserRegistrationMvc.Controllers
         public IActionResult Register()
         {
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString(LOGIN_SESSION_KEY)))
-                return RedirectToAction("Login");
+                return RedirectToAction("Index");
             return View();
         }
        
@@ -38,7 +36,7 @@ namespace UserRegistrationMvc.Controllers
                 ModelState.AddModelError("", result);
                 return View(registerVM);
             }
-            return RedirectToAction(nameof(Register));
+            return RedirectToAction(nameof(Login));
         }
 
         public IActionResult Login()
@@ -64,7 +62,7 @@ namespace UserRegistrationMvc.Controllers
 
             HttpContext.Session.SetString(LOGIN_SESSION_KEY,user.Role.Name);
             HttpContext.Session.SetString(LOGIN_SESSION_USERNAME, user.Username);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult LogOut()

@@ -8,6 +8,6 @@ namespace UserRegistrationMvc.Services
         Task<string> Register(UserRegisterVM registerVM);
         Task<bool> Login(UserLoginVM loginVM);
         Task<List<User>> GetUsers();
-        Task<User> GetUserAsync(UserLoginVM loginVM)
+        Task<User> GetUserAsync(UserLoginVM loginVM);
     }
 }

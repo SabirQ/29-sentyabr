@@ -15,7 +15,10 @@ namespace UserRegistrationMvc.Controllers
         [Custom(RoleEnum.Member)]
         public IActionResult Index()
         {
-            return View();
+            string username = HttpContext.Session.GetString("username");
+            if (string.IsNullOrEmpty(username)) return NotFound();
+            
+            return View("Index",username);
         }
         [Custom(RoleEnum.Member)]
         public IActionResult Privacy()
